@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/gancho_ropa_vector"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_armario"
+            android:icon="@drawable/gancho_ropa_vector"
+            android:title="Armario" />
+        <item
+            android:id="@+id/nav_add_ropa"
+            android:icon="@drawable/gancho_ropa_vector"
+            android:title="Añadir ropa" />
+    </group>
+</menu>
