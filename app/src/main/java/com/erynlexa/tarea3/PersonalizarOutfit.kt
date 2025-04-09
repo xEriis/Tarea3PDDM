@@ -1,120 +1,81 @@
 package com.erynlexa.tarea3
 
-import android.os.AsyncTask
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.os.Handler
+import android.os.Looper
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 import kotlin.math.ceil
 
-class PersonalizarOutfit : AppCompatActivity() {
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var toolbar: Toolbar
+class PersonalizarOutfit : Fragment() {
+    //Text de vistas que necesitamos, las actualizaremos más tarde
+    private lateinit var temperaturaClima: TextView
+    private lateinit var descripcionClima: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_personalizar_outfit)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_personalizar_outfit, container, false)
+        //Ubicamos el id de las vistas que vamos a actualizar
+        temperaturaClima = view.findViewById(R.id.temperaturaClima)
+        descripcionClima = view.findViewById(R.id.descripcionclima)
 
-        // Configura la Toolbar
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        // Configura el menú de hamburguesa
-        drawerLayout = findViewById(R.id.drawer_layout)
-        val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.Abrir_drawer,
-            R.string.Cerrar_drawer
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        // Maneja clics en el menú lateral
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_perfil -> { /* Navegar a Inicio */ }
-                R.id.nav_armario -> { /* Navegar a Perfil */ }
-                R.id.nav_add_ropa -> { /* Navegar a Configuración */ }
-            }
-            drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        }
-
-        val solicitaClima : Button = findViewById(R.id.actualizaClima)
+        val solicitaClima: Button = view.findViewById(R.id.actualizaClima)
         solicitaClima.setOnClickListener {
-            Toast.makeText(this, "Actualizando...", Toast.LENGTH_SHORT).show()
-            obtenClima()
-        }
-
-    }
-
-    // Configura el menú de opciones (tres puntos)
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.opciones_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_search -> { /* Acción de búsqueda */ true }
-            R.id.action_help -> { /* Mostrar ayuda */ true }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun obtenClima(){
-        obtenClimaCiudad().execute()
-    }
-
-    inner class obtenClimaCiudad : AsyncTask<String, Void, String>(){
-
-        override fun doInBackground(vararg p0: String?): String? {
-            var response: String?
-            try {
-                response = URL("https://api.openweathermap.org/data/2.5/weather?lat=19.3215473&lon=-99.1849188&appid=f6adade6884dd6823a33809867ec6cb9&units=metric&lang=es")
-                    .readText(Charsets.UTF_8)
-            }catch (e : Exception){
-                response = null
+            //No podemos presionar 200,000 veces por segundo la consulta, pues nos banearían de la api jajaja
+            if (solicitaClima.isEnabled) {
+                solicitaClima.isEnabled = false
+                //Comenté estas lineas para que no saliera el mensajito (Se me empezó a hacer molesto que me dijera actualizando cuando fallaba jajaja)
+                //Toast.makeText(requireContext(), "¡Actualizando!", Toast.LENGTH_SHORT).show()
+                obtenClima()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    solicitaClima.isEnabled = true
+                }, 5000)
+            } else {
+                Toast.makeText(requireContext(), "Espera 5 segundos antes de volver a consultar ):", Toast.LENGTH_SHORT).show()
             }
-            return response
         }
 
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
+        return view
+    }
+    //Función actualizada con corrutinas como fue sugerido
+    private fun obtenClima() {
+        if (!isAdded) return
+        lifecycleScope.launch {
             try {
+                //Intentamos obtener el el JSON del clima
+                val result = withContext(Dispatchers.IO) {
+                    URL("https://api.openweathermap.org/data/2.5/weather?lat=19.3215473&lon=-99.1849188&appid=f6adade6884dd6823a33809867ec6cb9&units=metric&lang=es").readText(Charsets.UTF_8)
+                }
+                //Obtenemos el objeto JSON
                 val objetoJSON = JSONObject(result)
                 val main = objetoJSON.getJSONObject("main")
                 val clima = objetoJSON.getJSONArray("weather").getJSONObject(0)
 
+                //Obtenemos la descripción y le aplicamos ceil a la temperatura
                 val descripcion = clima.getString("description")
-                val temperaturaString = main.getString("temp")
-                val temperaturaNum = temperaturaString.toFloat()
-                val temperatura = ceil(temperaturaNum).toInt()
-                val temperaturaRedondeada = temperatura.toString()
-                val temperaturaActual = temperaturaRedondeada + "°C"
+                val temperatura = ceil(main.getString("temp").toFloat()).toInt()
 
-                findViewById<TextView>(R.id.temperaturaClima).text = temperaturaActual
-                findViewById<TextView>(R.id.descripcionclima).text = descripcion
+                //Actualizamos los textView
+                temperaturaClima.text = "$temperatura°C"
+                descripcionClima.text = descripcion
 
-            }catch (e: Exception){
-                findViewById<TextView>(R.id.temperaturaClima).text = null
-                findViewById<TextView>(R.id.descripcionclima).text = null
+            } catch (e: Exception) {
+                //En cuyo caso dejaremos vacías las vistas
+                temperaturaClima.text = ""
+                descripcionClima.text = ""
             }
         }
     }

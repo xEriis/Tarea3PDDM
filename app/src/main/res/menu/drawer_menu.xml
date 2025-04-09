@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
+        <!-- OPCIONES DEL MENU -->
+        <!-- Se pueden agregar o quitar opciones según consideren -->
         <item
-            android:id="@+id/nav_perfil"
+            android:id="@+id/personalizarOutfit"
+            android:icon="@drawable/gancho_ropa_vector"
+            android:title="@string/Titulo_personalizar_outfit" />
+        <item
+            android:id="@+id/perfilUsuario"
             android:icon="@drawable/gancho_ropa_vector"
             android:title="Perfil" />
         <item
-            android:id="@+id/nav_armario"
+            android:id="@+id/agregarRopa"
+            android:icon="@drawable/gancho_ropa_vector"
+            android:title="AgregarRopa" />
+        <item
+            android:id="@+id/armario"
             android:icon="@drawable/gancho_ropa_vector"
             android:title="Armario" />
-        <item
-            android:id="@+id/nav_add_ropa"
-            android:icon="@drawable/gancho_ropa_vector"
-            android:title="Añadir ropa" />
+
     </group>
 </menu>

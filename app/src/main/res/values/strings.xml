@@ -25,4 +25,5 @@
     <string name="Cerrar_drawer">Cerrado</string>
     <string name="Titulo_personalizar_outfit">¡Personalización!</string>
     <string name="Header_string">Ventanas de navegación</string>
+    <string name="Saludo">¡Hola!</string>
 </resources>
