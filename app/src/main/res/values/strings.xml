@@ -26,4 +26,12 @@
     <string name="Titulo_personalizar_outfit">¡Personalización!</string>
     <string name="Header_string">Ventanas de navegación</string>
     <string name="Saludo">¡Hola!</string>
+    <string name="NombreUsuario">Nombre del usuario</string>
+    <string name="CerrarSesion">Cerrar sesión</string>
+    <string name="EliminarCuenta">Eliminar cuenta</string>
+    <string name="GuardarPrenda">Guardar prenda</string>
+    <string name="Color">Color</string>
+    <string name="Categoría">Categoría</string>
+    <string name="NombrePrenda">Nombre de la prenda</string>
+    <string name="agregar_foto">Agregar foto</string>
 </resources>
