@@ -52,6 +52,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/correo"
                 android:hint="@string/Correo"
+                app:errorEnabled="true"
+                app:errorIconDrawable="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5">
@@ -63,6 +65,9 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/contraseña"
                 android:hint="@string/Contraseña"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true"
+                app:errorIconDrawable="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5">
