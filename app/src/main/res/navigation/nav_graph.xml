@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/personalizarOutfit">
+    <!-- Start destination es el fragmento del cual vamos a iniciar -->
+    <!-- Fragmentos a los cuales van a partir de la barrita de navigation -->
+    <fragment
+        android:id="@+id/personalizarOutfit"
+        android:name="com.erynlexa.tarea3.PersonalizarOutfit"
+        android:label="@string/Titulo_personalizar_outfit"
+        tools:layout="@layout/fragment_personalizar_outfit" >
+        <!-- Acción para que vaya a la sección de agregar ropa -->
+        <action
+            android:id="@+id/action_to_agregarRopa"
+            app:destination="@id/agregarRopa" />
+        <action
+            android:id="@+id/action_personalizarOutfit_to_perfilUsuario2"
+            app:destination="@id/perfilUsuario" />
+        <action
+            android:id="@+id/action_personalizarOutfit_to_armario2"
+            app:destination="@id/armario" />
+    </fragment>
+
+    <!-- Fragmentos que vamos a necesitar -->
+    <fragment
+        android:id="@+id/agregarRopa"
+        android:name="com.erynlexa.tarea3.AgregarRopa"
+        android:label="@string/Agregar_prenda"
+        tools:layout="@layout/fragment_agregar_ropa" />
+    <fragment
+        android:id="@+id/perfilUsuario"
+        android:name="com.erynlexa.tarea3.PerfilUsuario"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil_usuario" />
+    <fragment
+        android:id="@+id/armario"
+        android:name="com.erynlexa.tarea3.Armario"
+        android:label="Armario"
+        tools:layout="@layout/fragment_armario" />
+</navigation>
